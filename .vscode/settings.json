@@ -1,0 +1,30 @@
+{
+  "[python]": {
+    "editor.rulers": [90],
+    "editor.tabSize": 4,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": true,
+      "source.organizeImports": true
+    },
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.detectIndentation": true,
+    "editor.insertSpaces": true
+  },
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+  "python.languageServer": "Pylance",
+  "cSpell.words": [
+    "bfill",
+    "dataframe",
+    "dropna",
+    "dtype",
+    "dtypes",
+    "ffill",
+    "fillna",
+    "isin",
+    "isna",
+    "nunique",
+    "quantile"
+  ],
+}
