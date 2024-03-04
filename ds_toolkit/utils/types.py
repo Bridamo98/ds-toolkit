@@ -20,18 +20,14 @@ U = TypeVar("U")
 
 DATETIME_TYPE = type(datetime)
 
-PRIMITIVES: Union[
-    Type[bool], Type[str], Type[int], Type[float], Type[None], Type[datetime]
-] = Union[bool, str, int, float, type(None), datetime]
+PRIMITIVES = Union[bool, str, int, float, type(None), datetime]
 
 
 def is_primitive(obj: Any) -> bool:
     return isinstance(obj, PRIMITIVES)
 
 
-def optional(
-    obj: Any, key: str, cls: Callable[[Any], U] | type[Enum], cls_name: str
-) -> U | None:
+def optional(obj: Any, key: str, cls: Callable[[Any], U], cls_name: str) -> U | None:
     if key in obj:
         if obj[key] is None:
             return None
@@ -46,7 +42,7 @@ def optional(
 
 
 def optional_list(
-    obj: Any, key: str, cls: Callable[[Any], U] | Type[Enum], cls_name: str
+    obj: Any, key: str, cls: Callable[[Any], U], cls_name: str
 ) -> list[U] | None:
     if key in obj:
         if obj[key] is None:
@@ -57,9 +53,7 @@ def optional_list(
     return None
 
 
-def required(
-    obj: Any, key: str, cls: Callable[[Any], U] | Type[Enum], cls_name: str
-) -> U:
+def required(obj: Any, key: str, cls: Callable[[Any], U], cls_name: str) -> U:
     if key in obj:
         if obj[key] is not None and not isinstance(obj[key], list):
             return cls(obj[key])
@@ -70,7 +64,7 @@ def required(
 
 
 def required_list(
-    obj: Any, key: str, cls: Callable[[Any], U] | Type[Enum], cls_name: str
+    obj: Any, key: str, cls: Callable[[Any], U], cls_name: str
 ) -> list[U]:
     if key in obj:
         if obj[key] is not None and isinstance(obj[key], list):

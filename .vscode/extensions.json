@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    // Specifics
+    "charliermarsh.ruff",
+    "GrapeCity.gc-excelviewer",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    // Generals
+    "shardulm94.trailing-spaces",
+    "streetsidesoftware.code-spell-checker",
+    "SonarSource.sonarlint-vscode",
+    "usernamehw.errorlens",
+    "znck.grammarly",
+    "eamodio.gitlens",
+  ],
+}
