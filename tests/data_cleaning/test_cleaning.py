@@ -1,14 +1,9 @@
 import csv
-import logging
 import os
 
 from pandas import DataFrame
 
-from ds_toolkit import data_cleaning
-
-logging.getLogger().setLevel(logging.INFO)
-FORMAT = "%(message)s"
-logging.basicConfig(format=FORMAT)
+from ds_toolkit.data_cleaning import clean, save_result
 
 
 def are_csv_files_equal(file1: str, file2: str):
@@ -27,7 +22,7 @@ def are_csv_files_equal(file1: str, file2: str):
 def prepare_test(root_dir: str):
     relative_config_path = "assets/data_cleaning.yml"
     update_mocked_data = False  # Set to True if mocked data is necessary to update
-    intermediate_steps = data_cleaning.clean(
+    intermediate_steps = clean(
         root_dir,
         relative_config_path,
         return_intermediate_steps=True,
@@ -38,7 +33,7 @@ def prepare_test(root_dir: str):
 
     if intermediate_steps is not None:
         for step in intermediate_steps:
-            data_cleaning.save_result(
+            save_result(
                 DataFrame(step["dataframe"]),
                 os.path.join(root_dir, f"assets/mock/obtained/{str(step['name'])}.csv"),
             )
