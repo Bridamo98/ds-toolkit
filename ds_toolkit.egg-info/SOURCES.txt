@@ -1,4 +1,5 @@
 README.md
+pyproject.toml
 setup.py
 ds_toolkit/__init__.py
 ds_toolkit/data_cleaning.py

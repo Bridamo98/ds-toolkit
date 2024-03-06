@@ -1,5 +1,6 @@
 # Required libraries
 import logging
+import os
 from datetime import datetime
 from math import floor
 from typing import Any
@@ -8,25 +9,45 @@ import numpy as np
 import pandas as pd
 import yaml
 from pandas.core.frame import DataFrame
-from utils.types import (
-    PRIMITIVES,
-    DataCleaningConfigFile,
-    FillMethod,
-    HandleMissingData,
-    HandleOutliers,
-    NumericalApplyMethod,
-    NumericalDetectMethod,
-    RemoveDuplicate,
-    RemoveIrrelevant,
-    VariableNames,
-    VariableNamesApply,
-    VariableType,
-    VariableValues,
-    VariableValuesApplyFunction,
-    VariableValuesApplyParams,
-)
 
-logging.getLogger().setLevel(logging.WARNING)
+try:
+    from ds_toolkit.utils.types import (
+        PRIMITIVES,
+        DataCleaningConfigFile,
+        FillMethod,
+        HandleMissingData,
+        HandleOutliers,
+        NumericalApplyMethod,
+        NumericalDetectMethod,
+        RemoveDuplicate,
+        RemoveIrrelevant,
+        VariableNames,
+        VariableNamesApply,
+        VariableType,
+        VariableValues,
+        VariableValuesApplyFunction,
+        VariableValuesApplyParams,
+    )
+except ImportError:
+    from utils.types import (
+        PRIMITIVES,
+        DataCleaningConfigFile,
+        FillMethod,
+        HandleMissingData,
+        HandleOutliers,
+        NumericalApplyMethod,
+        NumericalDetectMethod,
+        RemoveDuplicate,
+        RemoveIrrelevant,
+        VariableNames,
+        VariableNamesApply,
+        VariableType,
+        VariableValues,
+        VariableValuesApplyFunction,
+        VariableValuesApplyParams,
+    )
+
+logging.getLogger().setLevel(logging.INFO)
 FORMAT = "%(message)s"
 logging.basicConfig(format=FORMAT)
 
@@ -97,7 +118,7 @@ def test_transformation(
         return dataset
 
 
-def test(
+def perform(
     params: dict[str, Any],
     transformation,
     original_dataset: DataFrame | None,
@@ -796,19 +817,26 @@ def handle_outliers(
     turnoff_verbose()
 
 
-def main():
+def save_result(dataset: DataFrame | None, path: str):
+    if dataset is None:
+        return
+    dataset.to_csv(path)
+
+
+def clean(root_dir: str, config_path: str, return_intermediate_steps: bool = False):
+    config_file_path = os.path.join(root_dir, config_path)
     # Read config file ----------------------------------------------------
-    dt_config = read_dt_config_file("data-cleaning.yml")
+    dt_config = read_dt_config_file(config_file_path)
     handled_dt_config: DataCleaningConfigFile = handle_dt_config(dt_config)
     # pprint(handled_dt_config.get(), sort_dicts=False)
 
     # Read original dataset -----------------------------------------------
-    kwargs = {"params": handled_dt_config.general.input}
+    kwargs = {"params": os.path.join(root_dir, handled_dt_config.general.input)}
     original_dataset = read_dataset(**kwargs)
-    logging.warning(original_dataset)
+    # logging.warning(original_dataset)
 
     # 1. PREPARE VARIABLE NAMES
-    t1 = test(
+    t1 = perform(
         params={
             "params": handled_dt_config.stages.prepare.variable_names
             if handled_dt_config.stages.prepare is not None
@@ -821,7 +849,7 @@ def main():
     )
 
     # 2. PREPARE VARIABLE VALUES
-    t2 = test(
+    t2 = perform(
         params={
             "params": handled_dt_config.stages.prepare.variable_values
             if handled_dt_config.stages.prepare is not None
@@ -834,7 +862,7 @@ def main():
     )
 
     # 3. HANDLE DUPLICATE DATA
-    t3 = test(
+    t3 = perform(
         params={"params": handled_dt_config.stages.remove_duplicate},
         transformation=handle_duplicate_data,
         original_dataset=t2,
@@ -843,7 +871,7 @@ def main():
     )
 
     # 4. HANDLE IRRELEVANT DATA
-    t4 = test(
+    t4 = perform(
         params={"params": handled_dt_config.stages.remove_irrelevant},
         transformation=handle_irrelevant_data,
         original_dataset=t3,
@@ -851,8 +879,8 @@ def main():
         transformation_verbose=True,
     )
 
-    # 4. HANDLE IRRELEVANT DATA
-    t5 = test(
+    # 5. HANDLE MISSING DATA
+    t5 = perform(
         params={"params": handled_dt_config.stages.handle_missing_data},
         transformation=handle_missing_data,
         original_dataset=t4,
@@ -860,14 +888,22 @@ def main():
         d_is_returned=True,
     )
 
-    # 4. HANDLE IRRELEVANT DATA
-    test(
+    # 6. HANDLE OUTLIERS
+    result = perform(
         params={"params": handled_dt_config.stages.handle_outliers},
         transformation=handle_outliers,
         original_dataset=t5,
         transformation_verbose=True,
-        test_verbose=True,
+        d_is_returned=True,
     )
+
+    result_path = os.path.join(root_dir, handled_dt_config.general.output)
+
+    save_result(result, result_path)
+
+
+def main():
+    pass
 
 
 if __name__ == "__main__":

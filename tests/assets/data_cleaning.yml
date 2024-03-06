@@ -1,7 +1,7 @@
 ---
 general: # required
-  input: 'test-data.csv' # <str>
-  output: 'cleaned-dataset.csv' # <str>
+  input: 'assets/test_data.csv' # <str>
+  output: 'assets/cleaned_dataset.csv' # <str>
 stages: # required (at least one)
   prepare: # optional
     variable_names: # optional
