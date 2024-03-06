@@ -15,7 +15,9 @@
   "python.analysis.autoImportCompletions": true,
   "python.languageServer": "Pylance",
   "cSpell.words": [
+    "Agudelo",
     "bfill",
+    "Briam",
     "dataframe",
     "dropna",
     "dtype",

@@ -152,6 +152,8 @@ def prepare_var_names(
 
     logging.info("(1) PREPARE VARIABLE NAMES:")
 
+    print(params)
+
     if params is not None:
         if params.apply.value == VariableNamesApply.UPPER:
             dataset.columns = dataset.columns.str.upper()
@@ -643,6 +645,21 @@ def fill_outliers_by_method(
         dataset = dataset[~dataset.index.isin(outliers_ids)]
 
 
+def fill_outliers_by_limit(
+    outliers_ids: list[int],
+    column: str,
+    apply_limit: float | int | type[datetime],
+    dataset: DataFrame,
+):
+    dataset[column] = np.where(
+        dataset.index.isin(outliers_ids),
+        apply_limit
+        if not isinstance(apply_limit, type[datetime])  # type: ignore
+        else str(apply_limit),
+        dataset[column],
+    )
+
+
 def fill_outliers(
     outliers_ids: list[int],
     apply: NumericalApplyMethod | None,
@@ -657,6 +674,9 @@ def fill_outliers(
             logging.info(
                 f'{LEVEL_4}🔹 Detected {"LOWER" if is_lower else "UPPER"} outliers in "{column}" => ids {outliers_ids}'
             )
+
+        if apply_limit is not None:
+            fill_outliers_by_limit(outliers_ids, column, apply_limit, dataset)
     else:
         logging.info(
             f'{LEVEL_4}🔹 NOT detected {"LOWER" if is_lower else "UPPER"} outliers in "{column}"'
@@ -675,9 +695,26 @@ def apply_handle_outliers(
 ):
     if to_names is not None:
         for column in to_names:
-            pass
+            method_ids = get_outliers_by_method(detect_method, dataset, column)
+            lower_methods_ids = method_ids[0]
+            upper_methods_ids = method_ids[1]
 
-        # logging.info(f"{LEVEL_3}✅ Fill with '{fill_value}' to {to_names}")
+            fill_outliers(
+                lower_methods_ids,
+                apply_lower,
+                apply_lower_limit,
+                True,
+                column,
+                dataset,
+            )
+            fill_outliers(
+                upper_methods_ids,
+                apply_upper,
+                apply_upper_limit,
+                False,
+                column,
+                dataset,
+            )
 
     else:
         logging.info(f"{LEVEL_3}{SKIP_TO_NAMES}")
@@ -768,7 +805,7 @@ def main():
     # Read original dataset -----------------------------------------------
     kwargs = {"params": handled_dt_config.general.input}
     original_dataset = read_dataset(**kwargs)
-    # logging.info(original_dataset)
+    logging.warning(original_dataset)
 
     # 1. PREPARE VARIABLE NAMES
     t1 = test(
@@ -829,6 +866,7 @@ def main():
         transformation=handle_outliers,
         original_dataset=t5,
         transformation_verbose=True,
+        test_verbose=True,
     )
 
 

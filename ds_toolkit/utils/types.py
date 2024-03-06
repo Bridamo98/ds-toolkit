@@ -94,12 +94,26 @@ def identity_function(param: Any) -> Any:
     return param
 
 
-def test_at_least_one_not_none_field(self: Any, cls_name: str):
+def test_at_least_one_not_none_field(self: object, cls_name: str):
     at_least_one_not_none: bool = any(
         value is not None for (_, value) in self.__dict__.items()
     )
     if not at_least_one_not_none:
         raise Exception(f'ERROR: At least one field in "{cls_name}" must not be None')
+
+
+def test_at_least_one_not_none_field_in(
+    self: object, cls_name: str, specific_fields: list[str]
+):
+    print(self.__dict__)
+
+    for field in specific_fields:
+        if field in self.__dict__ and self.__dict__[field] is not None:
+            return
+
+    raise Exception(
+        f'ERROR: At least one field in "{cls_name}" {specific_fields} must not be None'
+    )
 
 
 # Enums
@@ -372,7 +386,7 @@ class FillApply:
         }
 
     fill_method: list[FillMethod] | None
-    value: float | int | bool | Type[datetime] | str | None
+    value: PRIMITIVES
 
 
 class Fill:
@@ -438,10 +452,16 @@ class NumericalApply:
             cls=NumericalApplyMethod, key="upper", obj=apply, cls_name="apply"
         )
         self.lower_limit = optional(
-            cls=identity_function, key="lower_limit", obj=apply, cls_name="detect"
+            cls=identity_function, key="lower_limit", obj=apply, cls_name="apply"
         )
         self.upper_limit = optional(
-            cls=identity_function, key="upper_limit", obj=apply, cls_name="detect"
+            cls=identity_function, key="upper_limit", obj=apply, cls_name="apply"
+        )
+        test_at_least_one_not_none_field_in(
+            self, cls_name="apply", specific_fields=["lower", "lower_limit"]
+        )
+        test_at_least_one_not_none_field_in(
+            self, cls_name="apply", specific_fields=["upper", "upper_limit"]
         )
 
     def get(self):
@@ -594,7 +614,7 @@ class Stages:
     remove_irrelevant: RemoveIrrelevant | None
     handle_missing_data: HandleMissingData | None
     handle_outliers: HandleOutliers | None
-    # fix_typos: list[FixTypos] | None # (NOT PLANED YET)
+    # fix_typos: list[FixTypos] | None # (NOT PLANNED YET)
 
 
 class DataCleaningConfigFile:
