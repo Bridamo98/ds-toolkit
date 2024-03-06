@@ -1,0 +1,53 @@
+,variablename1,variablename2,variablename3,variablename4,variablename5,variablename6,variablename7,variablename8,variablename9,month,one_lvl
+0,1,apple,10/1/2023 12:30,3.14,True,cat,100.0,cat,1.0,10.0,one
+1,2,banana,10/2/2023 10:15,2.71,True,dog,98.0,dog,,10.0,one
+2,3,Cherry,10/3/2023 8:45,3.0,True,elephant,105.0,elephant,3.0,10.0,one
+3,4,date,10/4/2023 18:00,4.29,False,fish,102.0,fish,,10.0,one
+4,5,Eggplant,10/5/2023 16:30,5.67,False,gorilla,101.0,gorilla,5.0,10.0,one
+5,6,fig,10/6/2023 14:15,3.89,True,hedgehog,104.0,hedgehog,7.0,10.0,one
+6,7,Grape,,6.28,False,jaguar,97.0,jaguar,,,one
+7,8,kiwi,10/8/2023 19:00,7.01,False,kangaroo,103.0,kangaroo,,10.0,one
+8,9,Lemon,10/9/2023 17:30,2.78,True,lemur,99.0,lemur,,10.0,one
+9,10,mango,10/10/2023 21:45,4.92,False,otter,96.0,otter,2.0,10.0,one
+10,11,,10/11/2023 22:00,6.76,False,panda,109.0,panda,,10.0,one
+11,12,Pear,10/12/2023 11:30,8.53,True,raccoon,110.0,raccoon,5.0,10.0,one
+12,13,Peach,10/13/2023 1:00,3.33,True,squirrel,111.0,squirrel,,10.0,one
+13,13,Peach,10/13/2023 1:00,3.33,True,squirrel,111.0,squirrel,,10.0,one
+14,14,Pineapple,10/14/2023 7:15,6.14,False,zebar,95.0,zebar,,10.0,one
+15,15,Plum,10/15/2023 6:30,5.45,True,tiger,107.0,tiger,,10.0,one
+16,16,Raspberry,10/16/2023 5:45,2.0,True,,112.0,,,10.0,one
+17,17,Strawberry,10/17/2023 3:15,4.11,False,cheetah,108.0,cheetah,,10.0,one
+18,18,watermelon,10/18/2023 15:00,3.89,True,horse,113.0,horse,,10.0,one
+19,19,APPLE,10/19/2023 23:45,5.75,False,cow,114.0,cow,4.0,10.0,one
+20,20,BANANA,10/20/2023 2:30,4.67,True,dolphin,94.0,dolphin,,10.0,one
+21,21,CHERRY,10/21/2023 4:15,3.2,False,penguin,115.0,penguin,,10.0,one
+22,22,DATE,10/22/2023 1:00,5.92,True,shark,116.0,shark,,10.0,one
+23,23,EGGPLANT,10/23/2023 14:45,2.55,False,turtle,117.0,turtle,54.0,10.0,one
+24,24,FISH,10/24/2023 9:30,4.78,True,parrot,93.0,parrot,,10.0,one
+25,25,FIG,10/25/2023 8:15,6.09,False,pigeon,118.0,pigeon,,10.0,one
+26,26,GRAPE,10/26/2023 7:45,7.32,True,seagull,119.0,seagull,,10.0,one
+27,27,KIWI,10/27/2023 6:00,3.87,False,hawk,120.0,hawk,,10.0,one
+28,28,LEMON,10/28/2023 5:15,4.22,True,,92.0,,,10.0,one
+29,29,MANGO,10/29/2023 4:30,5.65,False,falcon,121.0,falcon,,10.0,one
+30,30,ORANGE,10/30/2023 3:45,6.89,True,owl,122.0,owl,,10.0,one
+31,31,PEAR,10/31/2023 3:00,2.12,False,raven,91.0,raven,,10.0,one
+32,32,PEACH,11/1/2023 2:15,4.43,True,crow,123.0,crow,,11.0,one
+33,33,PINEAPPLE,11/2/2023 1:30,6.77,False,parakeet,124.0,parakeet,,11.0,one
+34,34,PLUM,11/3/2023 0:45,4.67,True,macaw,90.0,macaw,4.0,11.0,one
+35,35,RASPBERRY,11/4/2023 0:00,999.0,False,cockatoo,125.0,cockatoo,4.0,11.0,one
+36,36,STRAWBERRY,11/5/2023 23:15,5.51,True,canary,126.0,canary,,11.0,one
+37,37,WATERMELON,11/6/2023 22:30,7.05,False,budgerigar,89.0,budgerigar,5.0,11.0,one
+38,38,,11/7/2023 21:45,2.88,True,loveird,127.0,loveird,3.0,11.0,one
+39,38,Apple,11/7/2023 21:45,2.88,True,lovebird,127.0,lovebird,,11.0,one
+40,39,Banana,11/8/2023 21:00,4.24,False,,128.0,,4.0,11.0,one
+41,40,Cherry,11/9/2023 20:15,3.61,True,parrotlet,88.0,parrotlet,,11.0,one
+42,41,Date,11/10/2023 19:30,4.12,False,cockatiel,129.0,cockatiel,4.0,11.0,one
+43,42,Eggplant,11/11/2023 18:45,6.55,True,budgie,130.0,budgie,,11.0,one
+44,43,Fish,,7.98,False,canary,131.0,canary,,,one
+45,44,Fig,11/13/2023 17:15,3.36,True,finch,87.0,finch,,11.0,one
+46,45,Grape,11/14/2023 16:30,5.09,False,lovebird,132.0,lovebird,,11.0,one
+47,46,Kiwi,11/15/2023 15:45,6.31,True,parrot,133.0,parrot,,11.0,one
+48,47,Lemon,11/16/2023 15:00,4.25,False,parakeet,86.0,parakeet,,11.0,one
+49,48,,,,True,,,,,,one
+50,49,Orange,11/18/2023 13:30,6.77,False,cockatoo,135.0,cockatoo,,11.0,one
+51,50,Pear,11/19/2023 12:45,3.89,True,canary,85.0,canary,,11.0,one

@@ -823,7 +823,14 @@ def save_result(dataset: DataFrame | None, path: str):
     dataset.to_csv(path)
 
 
-def clean(root_dir: str, config_path: str, return_intermediate_steps: bool = False):
+def clean(
+    root_dir: str,
+    config_path: str,
+    return_intermediate_steps: bool = False,
+    save_intermediate_steps: bool = False,
+    steps_dir: str = "",
+    transformation_verbose: bool = False,
+):
     config_file_path = os.path.join(root_dir, config_path)
     # Read config file ----------------------------------------------------
     dt_config = read_dt_config_file(config_file_path)
@@ -835,71 +842,71 @@ def clean(root_dir: str, config_path: str, return_intermediate_steps: bool = Fal
     original_dataset = read_dataset(**kwargs)
     # logging.warning(original_dataset)
 
-    # 1. PREPARE VARIABLE NAMES
-    t1 = perform(
-        params={
-            "params": handled_dt_config.stages.prepare.variable_names
-            if handled_dt_config.stages.prepare is not None
-            else None
+    intermediate_steps: list[dict[str, str | DataFrame]] = []
+    temp_step: DataFrame | None = original_dataset
+    steps_definition: list[dict[str, Any]] = [
+        {
+            "name": "1.prepare_var_names",
+            "function": prepare_var_names,
+            "params": {
+                "params": handled_dt_config.stages.prepare.variable_names
+                if handled_dt_config.stages.prepare is not None
+                else None
+            },
         },
-        transformation=prepare_var_names,
-        original_dataset=original_dataset,
-        d_is_returned=True,
-        transformation_verbose=True,
-    )
-
-    # 2. PREPARE VARIABLE VALUES
-    t2 = perform(
-        params={
-            "params": handled_dt_config.stages.prepare.variable_values
-            if handled_dt_config.stages.prepare is not None
-            else None
+        {
+            "name": "2.prepare_var_values",
+            "function": prepare_var_values,
+            "params": {
+                "params": handled_dt_config.stages.prepare.variable_values
+                if handled_dt_config.stages.prepare is not None
+                else None
+            },
         },
-        transformation=prepare_var_values,
-        original_dataset=t1,
-        d_is_returned=True,
-        transformation_verbose=True,
-    )
+        {
+            "name": "3.handle_duplicate_data",
+            "function": handle_duplicate_data,
+            "params": {"params": handled_dt_config.stages.remove_duplicate},
+        },
+        {
+            "name": "4.handle_irrelevant_data",
+            "function": handle_irrelevant_data,
+            "params": {"params": handled_dt_config.stages.remove_irrelevant},
+        },
+        {
+            "name": "5.handle_missing_data",
+            "function": handle_missing_data,
+            "params": {"params": handled_dt_config.stages.handle_missing_data},
+        },
+        {
+            "name": "6.handle_outliers",
+            "function": handle_outliers,
+            "params": {"params": handled_dt_config.stages.handle_outliers},
+        },
+    ]
 
-    # 3. HANDLE DUPLICATE DATA
-    t3 = perform(
-        params={"params": handled_dt_config.stages.remove_duplicate},
-        transformation=handle_duplicate_data,
-        original_dataset=t2,
-        d_is_returned=True,
-        transformation_verbose=True,
-    )
-
-    # 4. HANDLE IRRELEVANT DATA
-    t4 = perform(
-        params={"params": handled_dt_config.stages.remove_irrelevant},
-        transformation=handle_irrelevant_data,
-        original_dataset=t3,
-        d_is_returned=True,
-        transformation_verbose=True,
-    )
-
-    # 5. HANDLE MISSING DATA
-    t5 = perform(
-        params={"params": handled_dt_config.stages.handle_missing_data},
-        transformation=handle_missing_data,
-        original_dataset=t4,
-        transformation_verbose=True,
-        d_is_returned=True,
-    )
-
-    # 6. HANDLE OUTLIERS
-    result = perform(
-        params={"params": handled_dt_config.stages.handle_outliers},
-        transformation=handle_outliers,
-        original_dataset=t5,
-        transformation_verbose=True,
-        d_is_returned=True,
-    )
+    for step in steps_definition:
+        name: str = step["name"]
+        func = step["function"]
+        params: dict[str, Any] = step["params"]
+        temp_step = perform(
+            params=params,
+            transformation=func,
+            original_dataset=temp_step,
+            d_is_returned=True,
+            transformation_verbose=transformation_verbose,
+        )
+        if temp_step is not None:
+            intermediate_steps.append({"name": name, "dataframe": temp_step})
+            if save_intermediate_steps:
+                save_result(temp_step, os.path.join(root_dir, f"{steps_dir}{name}.csv"))
 
     result_path = os.path.join(root_dir, handled_dt_config.general.output)
 
-    save_result(result, result_path)
+    save_result(DataFrame(intermediate_steps[-1]["dataframe"]), result_path)
+
+    if return_intermediate_steps:
+        return intermediate_steps
 
 
 def main():
