@@ -123,6 +123,72 @@ stages:
 
 Adjust the parameters and stages based on specific data cleaning requirements.
 
+## Output
+
+```
+(1) PREPARE VARIABLE NAMES:
+    ✅ variable names transformed to LOWER
+(2) PREPARE VARIABLE VALUES:
+    🔹 Transformation #1
+       ⏭  missing to_names: SKIPPED
+       ✅ apply ['lower'] to types ['str'] -> ['variablename2', 'variablename3', 'variablename6', 'variablename8', 'one_lvl']
+    🔹 Transformation #2
+       ✅ apply ['datetime'] to ['variablename3']
+       ⏭  missing to_types: SKIPPED
+    🔹 Transformation #3
+       ⏭  missing to_names: SKIPPED
+       ✅ apply ['round'] to types ['float'] -> ['variablename4', 'variablename7', 'variablename9', 'month']
+(3) HANDLE DUPLICATE DATA:
+    🔹 Remove duplicate records
+       ✅ before: 52 | after: 51 | diff: 1 (1.92%) => ids [13]
+    🔹 Remove duplicate variables
+       ✅ before: 11 | after: 10 | diff: 1 (9.09%) => ['variablename8']
+(4) HANDLE IRRELEVANT DATA:
+    🔹 Remove one level variables
+       ✅ before: 10 | after: 9 | diff: 1 (10.0%) => ['one_lvl']
+    🔹 Remove redundant variables
+       ✅ before: 9 | after: 8 | diff: 1 (11.11%) => ['month']
+(5) HANDLE MISSING DATA:
+    🔹 Remove
+       🔹 Variables up to the threshold
+          📊         Variable  Missing Data Proportion  Greater than th?
+           ▫ 0  variablename1                 0.000000             False
+           ▫ 1  variablename2                 0.058824             False
+           ▫ 2  variablename3                 0.058824             False
+           ▫ 3  variablename4                 0.019608             False
+           ▫ 4  variablename5                 0.000000             False
+           ▫ 5  variablename6                 0.078431             False
+           ▫ 6  variablename7                 0.019608             False
+           ▫ 7  variablename9                 0.725490              True
+          ✅ For th: 0.3 | before: 8 | after: 7 | diff: 1 (12.5%)
+       🔹 Records up to the threshold
+          📊 missing < th (0.1568627450980392 < 0.3)
+          ✅ For th: 0.3 | before: 51 | after: 43 | diff: 8 (15.69%)
+    🔹 Fill
+       🔹 Transformation #1
+          ⏭  missing to_names: SKIPPED
+          ✅ apply ['mean'] to types ['float', 'int'] -> ['variablename1', 'variablename4', 'variablename7']
+       🔹 Transformation #2
+          ⏭  missing to_names: SKIPPED
+          ✅ Fill with 'not defined' to types ['str'] -> ['variablename2', 'variablename6']
+       🔹 Transformation #3
+          ⏭  missing to_names: SKIPPED
+          ✅ apply ['interpolate'] to types ['datetime'] -> ['variablename3']
+(6) HANDLE OUTLIERS:
+    🔹 Outliers for Numerical Variables
+       🔹 Transformation #1
+          ⏭  missing to_names: SKIPPED
+          ✅ Use "z-score" in types ['float', 'int'] -> ['variablename1', 'variablename4', 'variablename7']
+             🔹 NOT detected LOWER outliers in "variablename1"
+             🔹 NOT detected UPPER outliers in "variablename1"
+             🔹 NOT detected LOWER outliers in "variablename4"
+             🔹 Detected UPPER outliers in "variablename4" => ids [35]
+             🔹 NOT detected LOWER outliers in "variablename7"
+             🔹 NOT detected UPPER outliers in "variablename7"
+```
+
 ---
 
 This documentation provides a comprehensive guide on using the data cleaning library and customizing the cleaning process according to specific requirements.
+
+
